@@ -1,0 +1,6 @@
+@app.route('/portal')
+@login_required
+def portal():
+    # Fetch user-specific data from the database
+    user_data = User.query.filter_by(username=current_user.username).first()
+    return render_template('portal.html', user_data=user_data)

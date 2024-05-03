@@ -1,0 +1,17 @@
+@app.route('/portal')
+@login_required
+def portal():
+    # Fetch user-specific data from the database
+    user_data = User.query.filter_by(username=current_user.username).first()
+
+    # Make a request to the OpenWeatherMap API
+    weather_api_key = 'your_api_key_here'
+    city = user_data.city
+    response = requests.get(f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_api_key}')
+    weather_data = response.json()
+
+    # Process weather data and pass it to the template
+    temperature = weather_data['main']['temp']
+    description = weather_data['weather'][0]['description']
+
+    return render_template('portal.html', user_data=user_data, temperature=temperature, description=description)
